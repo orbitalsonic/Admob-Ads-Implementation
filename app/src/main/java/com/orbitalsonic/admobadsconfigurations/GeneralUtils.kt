@@ -7,6 +7,9 @@ import android.net.NetworkCapabilities
 object GeneralUtils {
 
     const val AD_TAG = "AdsInformation"
+    var IS_AD_SHOWING = false
+    var IS_APP_PURCHASED = false
+    var IS_OPEN_APP_ACTIVE = true
 
     fun isInternetConnected(context: Context): Boolean {
         val connectivityManager =

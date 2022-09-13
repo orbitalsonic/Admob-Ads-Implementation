@@ -9,6 +9,7 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.orbitalsonic.admobadsconfigurations.GeneralUtils.AD_TAG
+import com.orbitalsonic.admobadsconfigurations.GeneralUtils.IS_AD_SHOWING
 import com.orbitalsonic.admobadsconfigurations.adsconfig.callbacks.InterstitialOnLoadCallBack
 import com.orbitalsonic.admobadsconfigurations.adsconfig.callbacks.InterstitialOnShowCallBack
 
@@ -66,17 +67,20 @@ class AdmobInterstitialAds(activity: Activity) {
                 override fun onAdDismissedFullScreenContent() {
                     Log.i(AD_TAG, "admob Interstitial onAdDismissedFullScreenContent")
                     interstitialOnShowCallBack?.onAdDismissedFullScreenContent()
+                    IS_AD_SHOWING = false
                 }
 
-                override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                     Log.i(AD_TAG, "admob Interstitial onAdFailedToShowFullScreenContent")
                     interstitialOnShowCallBack?.onAdFailedToShowFullScreenContent()
+                    IS_AD_SHOWING = false
                 }
 
                 override fun onAdShowedFullScreenContent() {
                     Log.i(AD_TAG, "admob Interstitial onAdShowedFullScreenContent")
                     interstitialOnShowCallBack?.onAdShowedFullScreenContent()
                     mInterstitialAd = null
+                    IS_AD_SHOWING = true
                 }
 
                 override fun onAdImpression() {
@@ -96,17 +100,20 @@ class AdmobInterstitialAds(activity: Activity) {
                     Log.i(AD_TAG, "admob Interstitial onAdDismissedFullScreenContent")
                     interstitialOnShowCallBack?.onAdDismissedFullScreenContent()
                     loadAgainInterstitialAd(admobInterstitialIds)
+                    IS_AD_SHOWING = false
                 }
 
-                override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                     Log.i(AD_TAG, "admob Interstitial onAdFailedToShowFullScreenContent")
                     interstitialOnShowCallBack?.onAdFailedToShowFullScreenContent()
+                    IS_AD_SHOWING = false
                 }
 
                 override fun onAdShowedFullScreenContent() {
                     Log.i(AD_TAG, "admob Interstitial onAdShowedFullScreenContent")
                     interstitialOnShowCallBack?.onAdShowedFullScreenContent()
                     mInterstitialAd = null
+                    IS_AD_SHOWING = true
                 }
 
                 override fun onAdImpression() {
