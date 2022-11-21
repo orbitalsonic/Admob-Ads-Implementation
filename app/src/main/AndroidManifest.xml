@@ -4,6 +4,7 @@
     package="com.orbitalsonic.admobadsconfigurations">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
@@ -18,7 +19,7 @@
 
         <activity
             android:name=".SplashActivity"
-            android:label="Splash Activity"
+            android:theme="@style/FullScreen"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/bg_ad_outline_shape"
         >
 
@@ -85,17 +85,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.gms.ads.nativead.MediaView
-            android:id="@+id/media_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/data_panel"
-            app:layout_constraintBottom_toTopOf="@id/ad_call_to_action"
-            />
         <Button
             android:id="@+id/ad_call_to_action"
             android:layout_width="match_parent"
@@ -106,10 +95,12 @@
             android:textSize="16dp"
             android:layout_marginHorizontal="20dp"
             android:layout_marginBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/data_panel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

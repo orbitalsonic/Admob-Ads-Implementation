@@ -12,127 +12,120 @@ import com.google.android.gms.ads.nativead.MediaView
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.orbitalsonic.admobadsconfigurations.GeneralUtils.AD_TAG
-import com.orbitalsonic.admobadsconfigurations.adsconfig.callbacks.BannerCallBack
 import com.orbitalsonic.admobadsconfigurations.R
+import com.orbitalsonic.admobadsconfigurations.adsconfig.callbacks.BannerCallBack
 
 
-class AdmobBannerAds(activity: Activity) {
-
+class AdmobBannerAds(private val mActivity: Activity) {
+    
     private var adaptiveAdView: AdView? = null
     var adMobNativeAd: NativeAd? = null
-    private val mActivity: Activity = activity
-    private var bannerCallBack: BannerCallBack? = null
     private var adLoader: AdLoader? = null
 
     fun loadBannerAds(
-        adsContainerLayout:LinearLayout,
-        adsHolder:LinearLayout,
-        shimmerFrameLayout: FrameLayout,
+        adsPlaceHolder:FrameLayout,
         admobAdaptiveIds: String,
-        isRemoteConfigActive: Boolean,
+        isAdActive: Boolean,
         isAppPurchased: Boolean,
         isInternetConnected:Boolean,
-        mListener: BannerCallBack
+        bannerCallBack: BannerCallBack
     ) {
-        bannerCallBack = mListener
-        if (isInternetConnected){
-            if (!isAppPurchased && isRemoteConfigActive) {
-                adaptiveAdView = AdView(mActivity)
-                adsHolder.addView(adaptiveAdView)
-                adaptiveAdView?.adUnitId = admobAdaptiveIds
-                adaptiveAdView?.adSize = getAdSize(adsHolder)
+        if (!isAppPurchased && isAdActive && isInternetConnected) {
+            adsPlaceHolder.visibility = View.VISIBLE
+            adaptiveAdView = AdView(mActivity)
+            adsPlaceHolder.removeAllViews()
+            adsPlaceHolder.addView(adaptiveAdView)
+            adaptiveAdView?.adUnitId = admobAdaptiveIds
+            adaptiveAdView?.setAdSize(getAdSize(adsPlaceHolder))
 
-                val adRequest = AdRequest
-                    .Builder()
-                    .build()
-                adaptiveAdView?.loadAd(adRequest)
-                adaptiveAdView?.adListener = object: AdListener() {
-                    override fun onAdLoaded() {
-                        Log.i(AD_TAG, "admob banner onAdLoaded")
-                        shimmerFrameLayout.visibility = View.GONE
-                        bannerCallBack?.onAdLoaded()
-                    }
-
-                    override fun onAdFailedToLoad(adError : LoadAdError) {
-                        Log.i(AD_TAG, "admob banner onAdFailedToLoad")
-                        adsContainerLayout.visibility = View.GONE
-                        bannerCallBack?.onAdFailedToLoad(adError.message)
-                    }
-
-                    override fun onAdImpression() {
-                        Log.i(AD_TAG, "admob banner onAdImpression")
-                        bannerCallBack?.onAdImpression()
-                        super.onAdImpression()
-                    }
+            val adRequest = AdRequest
+                .Builder()
+                .build()
+            adaptiveAdView?.loadAd(adRequest)
+            adaptiveAdView?.adListener = object: AdListener() {
+                override fun onAdLoaded() {
+                    Log.d(AD_TAG, "admob banner onAdLoaded")
+                    bannerCallBack.onAdLoaded()
                 }
-            }else{
-                adsContainerLayout.visibility = View.GONE
+
+                override fun onAdFailedToLoad(adError : LoadAdError) {
+                    Log.e(AD_TAG, "admob banner onAdFailedToLoad")
+                    adsPlaceHolder.visibility = View.GONE
+                    bannerCallBack.onAdFailedToLoad(adError.message)
+                }
+
+                override fun onAdImpression() {
+                    Log.d(AD_TAG, "admob banner onAdImpression")
+                    bannerCallBack.onAdImpression()
+                    super.onAdImpression()
+                }
             }
         }else{
-            adsContainerLayout.visibility = View.GONE
+            adsPlaceHolder.visibility = View.GONE
+            Log.e(AD_TAG, "Internet not Connected or App is Purchased or ad is not active from Firebase")
+            bannerCallBack.onAdFailedToLoad("Internet not Connected or App is Purchased or ad is not active from Firebase")
         }
-
-
     }
 
+    /**
+     * 1 = Small Native
+     * 2 = Large Native
+     * 3 = Small Native (replacement of Large Native in small screen)
+     */
     fun loadNativeAds(
-        adsContainerLayout:LinearLayout,
-        adsHolder:FrameLayout,
-        shimmerFrameLayout: FrameLayout,
-        nativeIds: String,
-        isRemoteConfigActive: Boolean,
+        adsPlaceHolder:FrameLayout,
+        admobNativeIds: String,
+        isAdActive: Boolean,
         isAppPurchased: Boolean,
-        nativeNo: Int,
         isInternetConnected:Boolean,
-        mListener: BannerCallBack
+        nativeNo: Int,
+        bannerCallBack: BannerCallBack
     ) {
-        bannerCallBack = mListener
-        if (isInternetConnected){
-            if (!isAppPurchased && isRemoteConfigActive) {
-                val builder: AdLoader.Builder = AdLoader.Builder(mActivity, nativeIds)
-                adLoader =
-                    builder.forNativeAd { unifiedNativeAd: NativeAd? -> adMobNativeAd = unifiedNativeAd }
-                        .withAdListener(object : AdListener() {
-                            override fun onAdImpression() {
-                                super.onAdImpression()
-                                Log.i(AD_TAG, "admob native onAdImpression")
-                                bannerCallBack?.onAdImpression()
-                            }
+        if (!isAppPurchased && isAdActive && isInternetConnected) {
+            adsPlaceHolder.visibility = View.VISIBLE
+            val builder: AdLoader.Builder = AdLoader.Builder(mActivity, admobNativeIds)
+            adLoader =
+                builder.forNativeAd { unifiedNativeAd: NativeAd? -> adMobNativeAd = unifiedNativeAd }
+                    .withAdListener(object : AdListener() {
+                        override fun onAdImpression() {
+                            super.onAdImpression()
+                            Log.d(AD_TAG, "admob native onAdImpression")
+                            bannerCallBack.onAdImpression()
+                        }
 
-                            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                                Log.i(AD_TAG, "admob native onAdFailedToLoad: " + loadAdError.message)
-                                bannerCallBack?.onAdFailedToLoad(loadAdError.message)
-                                adsContainerLayout.visibility = View.GONE
-                                super.onAdFailedToLoad(loadAdError)
-                            }
+                        override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                            Log.e(AD_TAG, "admob native onAdFailedToLoad: " + loadAdError.message)
+                            bannerCallBack.onAdFailedToLoad(loadAdError.message)
+                            adsPlaceHolder.visibility = View.GONE
+                            super.onAdFailedToLoad(loadAdError)
+                        }
 
-                            override fun onAdLoaded() {
-                                super.onAdLoaded()
-                                Log.i(AD_TAG, "admob native onAdLoaded")
-                                bannerCallBack?.onAdLoaded()
-                                shimmerFrameLayout.visibility = View.GONE
-                                populateUnifiedNativeAdView(adsHolder,nativeNo)
+                        override fun onAdLoaded() {
+                            super.onAdLoaded()
+                            Log.d(AD_TAG, "admob native onAdLoaded")
+                            bannerCallBack.onAdLoaded()
+                            populateUnifiedNativeAdView(adsPlaceHolder,nativeNo)
 
-                            }
+                        }
 
-                        }).withNativeAdOptions(
-                            com.google.android.gms.ads.nativead.NativeAdOptions.Builder()
-                                .setAdChoicesPlacement(
-                                    NativeAdOptions.ADCHOICES_TOP_RIGHT
-                                ).build()
-                        )
-                        .build()
-                adLoader?.loadAd(AdRequest.Builder().build())
-            }else{
-                adsContainerLayout.visibility = View.GONE
-            }
+                    }).withNativeAdOptions(
+                        com.google.android.gms.ads.nativead.NativeAdOptions.Builder()
+                            .setAdChoicesPlacement(
+                                NativeAdOptions.ADCHOICES_TOP_RIGHT
+                            ).build()
+                    )
+                    .build()
+            adLoader?.loadAd(AdRequest.Builder().build())
         }else{
-            adsContainerLayout.visibility = View.GONE
+            adsPlaceHolder.visibility = View.GONE
+            Log.e(AD_TAG, "Internet not Connected or App is Purchased or ad is not active from Firebase")
+            bannerCallBack.onAdFailedToLoad("Internet not Connected or App is Purchased or ad is not active from Firebase")
+
         }
 
     }
 
-    private fun getAdSize(adContainer: LinearLayout): AdSize {
+    private fun getAdSize(adContainer: FrameLayout): AdSize {
         val display = mActivity.windowManager.defaultDisplay
         val outMetrics = DisplayMetrics()
         display.getMetrics(outMetrics)
@@ -157,10 +150,18 @@ class AdmobBannerAds(activity: Activity) {
             val inflater = LayoutInflater.from(mActivity)
             val adView: NativeAdView = if (nativeNo == 1) {
                 inflater.inflate(R.layout.admob_native_small, null) as NativeAdView
-            } else {
+            } else if (nativeNo == 2) {
+                inflater.inflate(R.layout.admob_native_medium, null) as NativeAdView
+            }else if (nativeNo == 3){
+                if (isSupportFullScreen(mActivity)){
+                    inflater.inflate(R.layout.admob_native_medium, null) as NativeAdView
+                }else{
+                    inflater.inflate(R.layout.admob_native_small2, null) as NativeAdView
+                }
+
+            }else{
                 inflater.inflate(R.layout.admob_native_medium, null) as NativeAdView
             }
-            adMobNativeContainer.visibility = View.VISIBLE
             adMobNativeContainer.removeAllViews()
             adMobNativeContainer.addView(adView)
 
@@ -168,7 +169,12 @@ class AdmobBannerAds(activity: Activity) {
                 val mediaView: MediaView = adView.findViewById(R.id.media_view)
                 adView.mediaView = mediaView
             }
-
+            if (nativeNo == 3){
+                if (isSupportFullScreen(mActivity)){
+                    val mediaView: MediaView = adView.findViewById(R.id.media_view)
+                    adView.mediaView = mediaView
+                }
+            }
 
             // Set other ad assets.
             adView.headlineView = adView.findViewById(R.id.ad_headline)
@@ -227,6 +233,18 @@ class AdmobBannerAds(activity: Activity) {
 
             adView.setNativeAd(ad)
         }
+    }
+
+    fun isSupportFullScreen(activity: Activity): Boolean {
+        try {
+            val outMetrics = DisplayMetrics()
+            activity.windowManager.defaultDisplay.getMetrics(outMetrics)
+            if (outMetrics.heightPixels > 1280) {
+                return true
+            }
+        } catch (ignored: Exception) {
+        }
+        return false
     }
 
 }

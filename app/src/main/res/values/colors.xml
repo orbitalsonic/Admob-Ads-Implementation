@@ -12,4 +12,5 @@
     <color name="darkGray">#B7B7B7</color>
     <color name="darkerGray">#807F7F</color>
     <color name="lightGray">#F2F2F2</color>
+    <color name="adsBgColor">#424242</color>
 </resources>
