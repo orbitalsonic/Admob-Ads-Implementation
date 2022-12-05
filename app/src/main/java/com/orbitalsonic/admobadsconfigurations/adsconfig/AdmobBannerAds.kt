@@ -64,6 +64,7 @@ class AdmobBannerAds(private val mActivity: Activity) {
             adsPlaceHolder.visibility = View.GONE
             Log.e(AD_TAG, "Internet not Connected or App is Purchased or ad is not active from Firebase")
             bannerCallBack.onAdFailedToLoad("Internet not Connected or App is Purchased or ad is not active from Firebase")
+
         }
     }
 
