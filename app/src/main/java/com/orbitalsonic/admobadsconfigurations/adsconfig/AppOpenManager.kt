@@ -11,12 +11,12 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback
-import com.orbitalsonic.admobadsconfigurations.GeneralUtils.AD_TAG
-import com.orbitalsonic.admobadsconfigurations.GeneralUtils.IS_APP_PURCHASED
+import com.orbitalsonic.admobadsconfigurations.utils.GeneralUtils.AD_TAG
+import com.orbitalsonic.admobadsconfigurations.utils.GeneralUtils.IS_APP_PURCHASED
 import com.orbitalsonic.admobadsconfigurations.MainApplication
 import com.orbitalsonic.admobadsconfigurations.R
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.isOpenAppActive
-import com.orbitalsonic.admobadsconfigurations.SplashActivity
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.isOpenAppActive
+import com.orbitalsonic.admobadsconfigurations.activities.SplashActivity
 import java.util.*
 
 class AppOpenManager(private val myApplication: MainApplication) : LifecycleObserver,

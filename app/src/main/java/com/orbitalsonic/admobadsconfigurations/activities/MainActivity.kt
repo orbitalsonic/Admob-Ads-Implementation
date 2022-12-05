@@ -1,22 +1,24 @@
-package com.orbitalsonic.admobadsconfigurations
+package com.orbitalsonic.admobadsconfigurations.activities
 
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.orbitalsonic.admobadsconfigurations.GeneralUtils.IS_APP_PURCHASED
-import com.orbitalsonic.admobadsconfigurations.GeneralUtils.isInternetConnected
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.isMainBannerActive
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.isMainInterstitialActive
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.isMainNativeActive
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.remoteCounter
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.totalCount
+import com.orbitalsonic.admobadsconfigurations.R
+import com.orbitalsonic.admobadsconfigurations.utils.GeneralUtils.IS_APP_PURCHASED
+import com.orbitalsonic.admobadsconfigurations.utils.GeneralUtils.isInternetConnected
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.isMainBannerActive
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.isMainInterstitialActive
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.isMainNativeActive
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.remoteCounter
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.totalCount
 import com.orbitalsonic.admobadsconfigurations.adsconfig.AdmobBannerAds
 import com.orbitalsonic.admobadsconfigurations.adsconfig.AdmobInterstitialAds
 import com.orbitalsonic.admobadsconfigurations.adsconfig.callbacks.BannerCallBack
 import com.orbitalsonic.admobadsconfigurations.adsconfig.callbacks.InterstitialOnLoadCallBack
 import com.orbitalsonic.admobadsconfigurations.adsconfig.callbacks.InterstitialOnShowCallBack
 import com.orbitalsonic.admobadsconfigurations.databinding.ActivityMainBinding
+import com.orbitalsonic.admobadsconfigurations.utils.GeneralUtils
 
 class MainActivity : AppCompatActivity() {
 

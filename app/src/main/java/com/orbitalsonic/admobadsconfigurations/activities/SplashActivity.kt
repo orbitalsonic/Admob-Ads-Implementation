@@ -1,4 +1,4 @@
-package com.orbitalsonic.admobadsconfigurations
+package com.orbitalsonic.admobadsconfigurations.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,24 +13,25 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
-import com.orbitalsonic.admobadsconfigurations.GeneralUtils.AD_TAG
-import com.orbitalsonic.admobadsconfigurations.GeneralUtils.IS_APP_PURCHASED
-import com.orbitalsonic.admobadsconfigurations.GeneralUtils.isInternetConnected
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.isMainBannerActive
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.isMainInterstitialActive
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.isMainNativeActive
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.isOpenAppActive
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.isSplashInterstitialActive
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.isSplashNativeActive
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.is_main_banner_active
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.is_main_interstitial_active
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.is_main_native_active
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.is_open_app_ad_active
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.is_splash_interstitial_active
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.is_splash_native_active
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.remoteCounter
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.remote_counter_key
-import com.orbitalsonic.admobadsconfigurations.RemoteConfigConstants.totalCount
+import com.orbitalsonic.admobadsconfigurations.R
+import com.orbitalsonic.admobadsconfigurations.utils.GeneralUtils.AD_TAG
+import com.orbitalsonic.admobadsconfigurations.utils.GeneralUtils.IS_APP_PURCHASED
+import com.orbitalsonic.admobadsconfigurations.utils.GeneralUtils.isInternetConnected
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.isMainBannerActive
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.isMainInterstitialActive
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.isMainNativeActive
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.isOpenAppActive
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.isSplashInterstitialActive
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.isSplashNativeActive
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.is_main_banner_active
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.is_main_interstitial_active
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.is_main_native_active
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.is_open_app_ad_active
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.is_splash_interstitial_active
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.is_splash_native_active
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.remoteCounter
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.remote_counter_key
+import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.totalCount
 import com.orbitalsonic.admobadsconfigurations.adsconfig.AdmobBannerAds
 import com.orbitalsonic.admobadsconfigurations.adsconfig.AdmobInterstitialAds
 import com.orbitalsonic.admobadsconfigurations.adsconfig.callbacks.BannerCallBack
@@ -55,7 +56,7 @@ class SplashActivity : AppCompatActivity() {
         
 
         binding.btnNext.setOnClickListener {
-            startActivity(Intent(this,MainActivity::class.java))
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
 
             showInterstitial()

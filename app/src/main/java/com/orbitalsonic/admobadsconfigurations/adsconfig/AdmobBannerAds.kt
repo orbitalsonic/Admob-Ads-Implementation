@@ -11,7 +11,7 @@ import com.google.android.gms.ads.formats.NativeAdOptions
 import com.google.android.gms.ads.nativead.MediaView
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
-import com.orbitalsonic.admobadsconfigurations.GeneralUtils.AD_TAG
+import com.orbitalsonic.admobadsconfigurations.utils.GeneralUtils.AD_TAG
 import com.orbitalsonic.admobadsconfigurations.R
 import com.orbitalsonic.admobadsconfigurations.adsconfig.callbacks.BannerCallBack
 

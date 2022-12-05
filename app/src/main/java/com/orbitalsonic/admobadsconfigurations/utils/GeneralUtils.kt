@@ -1,4 +1,4 @@
-package com.orbitalsonic.admobadsconfigurations
+package com.orbitalsonic.admobadsconfigurations.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
