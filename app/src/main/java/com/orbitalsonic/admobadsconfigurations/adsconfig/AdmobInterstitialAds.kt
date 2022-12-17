@@ -63,6 +63,7 @@ class AdmobInterstitialAds(private val mActivity: Activity) {
                 override fun onAdDismissedFullScreenContent() {
                     Log.d(AD_TAG, "admob Interstitial onAdDismissedFullScreenContent")
                     mListener.onAdDismissedFullScreenContent()
+                    mInterstitialAd = null
                 }
 
                 override fun onAdFailedToShowFullScreenContent(adError: AdError) {
