@@ -162,17 +162,18 @@ class SplashActivity : AppCompatActivity() {
                 if (isInterstitialLoadOrFailed && isNativeLoadedOrFailed) {
                     binding.loadingProgress.visibility = View.GONE
                     binding.btnNext.visibility = View.VISIBLE
+                    mHandler.removeCallbacks { adsRunner }
+                }else{
+                    mHandler.removeCallbacks { adsRunner }
+                    mHandler.postDelayed(
+                        adsRunner,
+                        (1000)
+                    )
                 }
 
             } catch (e: Exception) {
                 Log.e(AD_TAG,"${e.message}")
             }
-
-            mHandler.removeCallbacks { adsRunner }
-            mHandler.postDelayed(
-                adsRunner,
-                (1000)
-            )
         } else {
             binding.loadingProgress.visibility = View.GONE
             binding.btnNext.visibility = View.VISIBLE
