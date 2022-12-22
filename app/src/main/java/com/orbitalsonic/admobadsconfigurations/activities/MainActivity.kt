@@ -17,6 +17,7 @@ import com.orbitalsonic.admobadsconfigurations.adsconfig.AdmobInterstitialAds
 import com.orbitalsonic.admobadsconfigurations.adsconfig.callbacks.BannerCallBack
 import com.orbitalsonic.admobadsconfigurations.adsconfig.callbacks.InterstitialOnLoadCallBack
 import com.orbitalsonic.admobadsconfigurations.adsconfig.callbacks.InterstitialOnShowCallBack
+import com.orbitalsonic.admobadsconfigurations.adsconfig.enums.CollapsiblePositionType
 import com.orbitalsonic.admobadsconfigurations.databinding.ActivityMainBinding
 import com.orbitalsonic.admobadsconfigurations.utils.GeneralUtils
 
@@ -92,6 +93,26 @@ class MainActivity : AppCompatActivity() {
                 }
 
             })
+
+        Log.d(GeneralUtils.AD_TAG, "Call Admob Banner Collapse")
+//        AdmobBannerAds(this).loadCollapseBannerAds(
+//            binding.bannerPlaceHolder,
+//            getString(R.string.admob_banner_collapse_id),
+//            CollapsiblePositionType.bottom,
+//            isMainBannerActive,
+//            IS_APP_PURCHASED,
+//            isInternetConnected(this),
+//            object : BannerCallBack {
+//                override fun onAdFailedToLoad(adError: String) {
+//                }
+//
+//                override fun onAdLoaded() {
+//                }
+//
+//                override fun onAdImpression() {
+//                }
+//
+//            })
 
     }
 

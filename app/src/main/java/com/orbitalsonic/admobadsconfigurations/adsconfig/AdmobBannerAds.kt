@@ -1,11 +1,14 @@
 package com.orbitalsonic.admobadsconfigurations.adsconfig
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
+import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.formats.NativeAdOptions
 import com.google.android.gms.ads.nativead.MediaView
@@ -14,6 +17,7 @@ import com.google.android.gms.ads.nativead.NativeAdView
 import com.orbitalsonic.admobadsconfigurations.utils.GeneralUtils.AD_TAG
 import com.orbitalsonic.admobadsconfigurations.R
 import com.orbitalsonic.admobadsconfigurations.adsconfig.callbacks.BannerCallBack
+import com.orbitalsonic.admobadsconfigurations.adsconfig.enums.CollapsiblePositionType
 
 
 class AdmobBannerAds(private val mActivity: Activity) {
@@ -40,6 +44,58 @@ class AdmobBannerAds(private val mActivity: Activity) {
 
             val adRequest = AdRequest
                 .Builder()
+                .build()
+            adaptiveAdView?.loadAd(adRequest)
+            adaptiveAdView?.adListener = object: AdListener() {
+                override fun onAdLoaded() {
+                    Log.d(AD_TAG, "admob banner onAdLoaded")
+                    bannerCallBack.onAdLoaded()
+                }
+
+                override fun onAdFailedToLoad(adError : LoadAdError) {
+                    Log.e(AD_TAG, "admob banner onAdFailedToLoad")
+                    adsPlaceHolder.visibility = View.GONE
+                    bannerCallBack.onAdFailedToLoad(adError.message)
+                }
+
+                override fun onAdImpression() {
+                    Log.d(AD_TAG, "admob banner onAdImpression")
+                    bannerCallBack.onAdImpression()
+                    super.onAdImpression()
+                }
+            }
+        }else{
+            adsPlaceHolder.visibility = View.GONE
+            Log.e(AD_TAG, "Internet not Connected or App is Purchased or ad is not active from Firebase")
+            bannerCallBack.onAdFailedToLoad("Internet not Connected or App is Purchased or ad is not active from Firebase")
+
+        }
+    }
+
+    @SuppressLint("LogNotTimber")
+    fun loadCollapseBannerAds(
+        adsPlaceHolder:FrameLayout,
+        admobAdaptiveIds: String,
+        collapsiblePositionType: CollapsiblePositionType,
+        isAdActive: Boolean,
+        isAppPurchased: Boolean,
+        isInternetConnected:Boolean,
+        bannerCallBack: BannerCallBack
+    ) {
+        if (isInternetConnected && !isAppPurchased && isAdActive) {
+            adsPlaceHolder.visibility = View.VISIBLE
+            adaptiveAdView = AdView(mActivity)
+            adsPlaceHolder.removeAllViews()
+            adsPlaceHolder.addView(adaptiveAdView)
+            adaptiveAdView?.adUnitId = admobAdaptiveIds
+            adaptiveAdView?.setAdSize(getAdSize(adsPlaceHolder))
+
+            val bundle = Bundle().apply {
+                putString("collapsible", collapsiblePositionType.toString())
+            }
+            val adRequest = AdRequest
+                .Builder()
+                .addNetworkExtrasBundle(AdMobAdapter::class.java, bundle)
                 .build()
             adaptiveAdView?.loadAd(adRequest)
             adaptiveAdView?.adListener = object: AdListener() {
