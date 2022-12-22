@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
                 showInterstitial()
                 totalCount += 1
             }else{
-                if (totalCount == remoteCounter) {
+                if (totalCount >= remoteCounter) {
                     totalCount = 1
                     loadInterstitialAds()
                 }else{
