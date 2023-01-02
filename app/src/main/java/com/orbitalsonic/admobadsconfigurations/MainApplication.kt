@@ -5,12 +5,20 @@ import com.orbitalsonic.admobadsconfigurations.adsconfig.AppOpenManager
 
 class MainApplication:Application() {
 
-    private var appOpenManager: AppOpenManager? = null
+    companion object {
+        private var instance: MainApplication? = null
+
+        fun getContext(): MainApplication {
+            return instance!!
+        }
+    }
+
+//    private var appOpenManager: AppOpenManager? = null
 
     override fun onCreate() {
         super.onCreate()
-
-        appOpenManager = AppOpenManager(this)
+        instance = this@MainApplication
+//        appOpenManager = AppOpenManager(this)
 
     }
 

@@ -13,6 +13,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import com.orbitalsonic.admobadsconfigurations.MainApplication
 import com.orbitalsonic.admobadsconfigurations.R
 import com.orbitalsonic.admobadsconfigurations.utils.GeneralUtils.AD_TAG
 import com.orbitalsonic.admobadsconfigurations.utils.GeneralUtils.IS_APP_PURCHASED
@@ -34,6 +35,7 @@ import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.remot
 import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.totalCount
 import com.orbitalsonic.admobadsconfigurations.adsconfig.AdmobBannerAds
 import com.orbitalsonic.admobadsconfigurations.adsconfig.AdmobInterstitialAds
+import com.orbitalsonic.admobadsconfigurations.adsconfig.AppOpenManager
 import com.orbitalsonic.admobadsconfigurations.adsconfig.callbacks.BannerCallBack
 import com.orbitalsonic.admobadsconfigurations.adsconfig.callbacks.InterstitialOnLoadCallBack
 import com.orbitalsonic.admobadsconfigurations.adsconfig.callbacks.InterstitialOnShowCallBack
@@ -50,10 +52,13 @@ class SplashActivity : AppCompatActivity() {
 
     private lateinit var remoteConfig: FirebaseRemoteConfig
 
+    private var appOpenManager: AppOpenManager? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
-        
+
+        appOpenManager = AppOpenManager(MainApplication.getContext())
 
         binding.btnNext.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
@@ -73,6 +78,8 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun loadAds() {
+
+        appOpenManager?.fetchAd()
 
         Log.d(AD_TAG, "Call Admob Splash Interstitial")
         AdmobInterstitialAds(this).loadInterstitialAd(getString(R.string.admob_interstitial_splash_ids),
