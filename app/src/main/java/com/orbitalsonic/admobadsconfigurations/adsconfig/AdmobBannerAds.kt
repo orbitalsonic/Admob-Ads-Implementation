@@ -1,23 +1,25 @@
 package com.orbitalsonic.admobadsconfigurations.adsconfig
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
 import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.formats.NativeAdOptions
 import com.google.android.gms.ads.nativead.MediaView
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
-import com.orbitalsonic.admobadsconfigurations.utils.GeneralUtils.AD_TAG
 import com.orbitalsonic.admobadsconfigurations.R
 import com.orbitalsonic.admobadsconfigurations.adsconfig.callbacks.BannerCallBack
 import com.orbitalsonic.admobadsconfigurations.adsconfig.enums.CollapsiblePositionType
+import com.orbitalsonic.admobadsconfigurations.utils.GeneralUtils.AD_TAG
 
 
 class AdmobBannerAds(private val mActivity: Activity) {
@@ -72,7 +74,6 @@ class AdmobBannerAds(private val mActivity: Activity) {
         }
     }
 
-    @SuppressLint("LogNotTimber")
     fun loadCollapseBannerAds(
         adsPlaceHolder:FrameLayout,
         admobAdaptiveIds: String,
