@@ -1,25 +1,21 @@
 package com.orbitalsonic.admobadsconfigurations
 
 import android.app.Application
-import com.orbitalsonic.admobadsconfigurations.adsconfig.AppOpenManager
+import com.orbitalsonic.admobadsconfigurations.helpers.koin.modulesList
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
-class MainApplication:Application() {
-
-    companion object {
-        private var instance: MainApplication? = null
-
-        fun getContext(): MainApplication {
-            return instance!!
-        }
-    }
-
-//    private var appOpenManager: AppOpenManager? = null
+class MainApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        instance = this@MainApplication
-//        appOpenManager = AppOpenManager(this)
-
+        initKoin()
     }
 
+    private fun initKoin() {
+        startKoin {
+            androidContext(this@MainApplication)
+            modules(modulesList)
+        }
+    }
 }

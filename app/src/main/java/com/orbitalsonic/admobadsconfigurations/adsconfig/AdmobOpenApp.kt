@@ -1,6 +1,7 @@
 package com.orbitalsonic.admobadsconfigurations.adsconfig
 
 import android.app.Activity
+import android.app.Application
 import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
 import android.util.Log
@@ -11,24 +12,24 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback
-import com.orbitalsonic.admobadsconfigurations.utils.GeneralUtils.AD_TAG
-import com.orbitalsonic.admobadsconfigurations.utils.GeneralUtils.IS_APP_PURCHASED
-import com.orbitalsonic.admobadsconfigurations.MainApplication
 import com.orbitalsonic.admobadsconfigurations.R
-import com.orbitalsonic.admobadsconfigurations.utils.RemoteConfigConstants.isOpenAppActive
-import com.orbitalsonic.admobadsconfigurations.activities.SplashActivity
+import com.orbitalsonic.admobadsconfigurations.adsconfig.constants.AdsConstants.mAppOpenAd
+import com.orbitalsonic.admobadsconfigurations.helpers.firebase.RemoteConstants.rcvOpenApp
+import com.orbitalsonic.admobadsconfigurations.helpers.koin.DIComponent
+import com.orbitalsonic.admobadsconfigurations.ui.activities.SplashActivity
 import java.util.*
 
-class AppOpenManager(private val myApplication: MainApplication) : LifecycleObserver,
+class AdmobOpenApp(private val myApplication: Application) : LifecycleObserver,
     ActivityLifecycleCallbacks {
-    private var mAppOpenAd: AppOpenAd? = null
     private var currentActivity: Activity? = null
     private var loadTime: Long = 0
+    private val diComponent = DIComponent()
+    private val AD_TAG = "AdsInformation"
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onStart() {
         try {
-            if (!IS_APP_PURCHASED && isOpenAppActive) {
+            if (!diComponent.sharedPreferenceUtils.isAppPurchased && rcvOpenApp != 0) {
                 showAdIfAvailable()
             }
         } catch (ignored: Exception) {
@@ -77,7 +78,7 @@ class AppOpenManager(private val myApplication: MainApplication) : LifecycleObse
             }
         }
 
-        if (!IS_APP_PURCHASED && isOpenAppActive) {
+        if (!diComponent.sharedPreferenceUtils.isAppPurchased && rcvOpenApp != 0) {
             AppOpenAd.load(
                 myApplication,
                 myApplication.getString(R.string.admob_open_app_ids),
@@ -90,7 +91,7 @@ class AppOpenManager(private val myApplication: MainApplication) : LifecycleObse
 
     private fun showAdIfAvailable() {
         try {
-            if (!isShowingAd && isAdAvailable) {
+            if (!diComponent.sharedPreferenceUtils.isAppPurchased && rcvOpenApp != 0) {
                 if (currentActivity is SplashActivity || currentActivity is AdActivity)
                     return
 
@@ -152,4 +153,5 @@ class AppOpenManager(private val myApplication: MainApplication) : LifecycleObse
         this.myApplication.registerActivityLifecycleCallbacks(this)
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
     }
+
 }
