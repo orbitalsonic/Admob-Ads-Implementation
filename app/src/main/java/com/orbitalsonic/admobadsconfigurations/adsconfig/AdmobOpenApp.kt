@@ -79,6 +79,12 @@ class AdmobOpenApp(private val myApplication: Application) : LifecycleObserver,
         }
 
         if (!diComponent.sharedPreferenceUtils.isAppPurchased && rcvOpenApp != 0) {
+//            AppOpenAd.load(
+//                myApplication,
+//                myApplication.getString(R.string.admob_open_app_ids),
+//                AdRequest.Builder().build(),
+//                loadCallback
+//            )
             AppOpenAd.load(
                 myApplication,
                 myApplication.getString(R.string.admob_open_app_ids),
