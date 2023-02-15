@@ -117,8 +117,8 @@ class AdmobNativeAds() {
 
                 } else {
                     adsPlaceHolder.visibility = View.GONE
-                    Log.e(AD_TAG, "Internet not Connected or App is Purchased or ad is not active from Firebase")
-                    bannerCallBack.onAdFailedToLoad("Internet not Connected or App is Purchased or ad is not active from Firebase")
+                    Log.e(AD_TAG, "adEnable = $adEnable, isAppPurchased = $isAppPurchased, isInternetConnected = $isInternetConnected")
+                    bannerCallBack.onAdFailedToLoad("adEnable = $adEnable, isAppPurchased = $isAppPurchased, isInternetConnected = $isInternetConnected")
                 }
 
             } catch (ex: Exception) {

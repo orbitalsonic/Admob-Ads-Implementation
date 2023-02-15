@@ -57,8 +57,8 @@ class AdmobInterstitialAds() {
                 }
 
             } else {
-                Log.e(AD_TAG, "Internet not Connected or App is Purchased or ad is not active from Firebase")
-                mListener.onAdFailedToLoad("Internet not Connected or App is Purchased or ad is not active from Firebase")
+                Log.e(AD_TAG, "adEnable = $adEnable, isAppPurchased = $isAppPurchased, isInternetConnected = $isInternetConnected")
+                mListener.onAdFailedToLoad("adEnable = $adEnable, isAppPurchased = $isAppPurchased, isInternetConnected = $isInternetConnected")
             }
         }
     }
