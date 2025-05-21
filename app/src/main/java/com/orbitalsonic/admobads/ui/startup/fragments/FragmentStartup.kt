@@ -1,19 +1,25 @@
-package com.orbitalsonic.admobads.ui.fragments.splash
+package com.orbitalsonic.admobads.ui.startup.fragments
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.lifecycle.lifecycleScope
+import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import com.orbitalsonic.admobads.R
 import com.orbitalsonic.admobads.adsconfig.interstitial.AdmobInterstitial
-import com.orbitalsonic.admobads.adsconfig.natives.AdmobNativePreload
-import com.orbitalsonic.admobads.adsconfig.banners.callbacks.BannerCallBack
 import com.orbitalsonic.admobads.adsconfig.interstitial.callbacks.InterstitialOnLoadCallBack
-import com.orbitalsonic.admobads.adsconfig.natives.callbacks.NativeCallBack
-import com.orbitalsonic.admobads.databinding.FragmentSplashStartBinding
-import com.orbitalsonic.admobads.helpers.firebase.RemoteConstants.rcvInterAd
-import com.orbitalsonic.admobads.helpers.firebase.RemoteConstants.rcvNativeAd
-import com.orbitalsonic.admobads.ui.fragments.base.BaseFragment
+import com.orbitalsonic.admobads.adsconfig.interstitial.callbacks.InterstitialOnShowCallBack
+import com.orbitalsonic.admobads.common.firebase.RemoteConfiguration
+import com.orbitalsonic.admobads.common.firebase.RemoteConstants.rcvInterAd
+import com.orbitalsonic.admobads.common.network.InternetManager
+import com.orbitalsonic.admobads.common.preferences.SharedPrefManager
+import com.orbitalsonic.admobads.databinding.FragmentStartupBinding
+import com.orbitalsonic.admobads.helpers.handlers.withDelay
+import com.orbitalsonic.admobads.helpers.lifecycle.launchWhenResumed
+import com.orbitalsonic.admobads.helpers.utils.getResString
+import com.orbitalsonic.admobads.ui.base.fragments.BaseFragment
+import com.orbitalsonic.admobads.ui.startup.StartupActivity
 
 /**
  * @Author: Muhammad Yaqoob
@@ -22,33 +28,52 @@ import com.orbitalsonic.admobads.ui.fragments.base.BaseFragment
  *      -> https://github.com/orbitalsonic
  *      -> https://www.linkedin.com/in/myaqoob7
  */
-class FragmentSplashStart : BaseFragment<FragmentSplashStartBinding>(R.layout.fragment_splash_start) {
+class FragmentStartup : BaseFragment<FragmentStartupBinding>(FragmentStartupBinding::inflate) {
 
     private val admobInterstitial by lazy { AdmobInterstitial() }
-    private val admobNativePreload by lazy { AdmobNativePreload() }
 
     private val mHandler = Handler(Looper.getMainLooper())
     private val adsRunner = Runnable { checkAdvertisement() }
     private var isInterLoadOrFailed = false
-    private var isNativeLoadedOrFailed = false
     private var mCounter: Int = 0
 
     private var startTime = 0L
 
-    override fun onViewCreatedOneTime() {
+    private val sharedPrefManager by lazy {
+        SharedPrefManager(
+            requireActivity().getSharedPreferences(
+                "app_preferences",
+                MODE_PRIVATE
+            )
+        )
+    }
+
+    private val internetManager by lazy {
+        val connectivityManager =
+            requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        InternetManager(connectivityManager)
+    }
+
+    private val remoteConfiguration by lazy {
+        RemoteConfiguration(
+            internetManager, requireActivity().getSharedPreferences(
+                "firebase_preferences",
+                MODE_PRIVATE
+            )
+        )
+    }
+
+    override fun onViewCreated() {
         fetchRemoteConfiguration()
     }
 
-    override fun onViewCreatedEverytime() {}
-
     private fun fetchRemoteConfiguration() {
-        diComponent.remoteConfiguration.checkRemoteConfig { fetchSuccessfully ->
-            Log.d("REMOTE_CONFIG", "fetchSuccessfully")
-            if (isAdded){
+        remoteConfiguration.checkRemoteConfig { fetchSuccessfully ->
+            if (isAdded) {
                 if (fetchSuccessfully) {
                     mCounter = 0
                     loadAds()
-                }else{
+                } else {
                     mHandler.removeCallbacks { adsRunner }
                     moveNext(2000)
                 }
@@ -63,14 +88,15 @@ class FragmentSplashStart : BaseFragment<FragmentSplashStartBinding>(R.layout.fr
                 0 -> {
                     isInterLoadOrFailed = true
                 }
+
                 1 -> {
                     Log.d("AdsInformation", "Call Admob Splash Interstitial")
-                   admobInterstitial.loadInterstitialAd(
+                    admobInterstitial.loadInterstitialAd(
                         activity,
                         getResString(R.string.admob_inter_ids),
                         rcvInterAd,
-                        diComponent.sharedPreferenceUtils.isAppPurchased,
-                        diComponent.internetManager.isInternetConnected,
+                        sharedPrefManager.isAppPurchased,
+                        internetManager.isInternetConnected,
                         object : InterstitialOnLoadCallBack {
                             override fun onAdFailedToLoad(adError: String) {
                                 isInterLoadOrFailed = true
@@ -79,7 +105,7 @@ class FragmentSplashStart : BaseFragment<FragmentSplashStartBinding>(R.layout.fr
                             override fun onAdLoaded() {
                                 isInterLoadOrFailed = true
                                 val endTime = System.currentTimeMillis()
-                                val loadingTime:Int = ((endTime - startTime)/1000).toInt()
+                                val loadingTime: Int = ((endTime - startTime) / 1000).toInt()
                                 Log.d("AdsInformation", "InterLoadingTime: ${loadingTime}s")
                             }
 
@@ -89,51 +115,20 @@ class FragmentSplashStart : BaseFragment<FragmentSplashStartBinding>(R.layout.fr
 
                         })
                 }
+
                 else -> {
                     isInterLoadOrFailed = true
                 }
             }
-
-            when (rcvNativeAd) {
-                0 -> {
-                    isNativeLoadedOrFailed = true
-                }
-                1 -> {
-                    Log.d("AdsInformation", "Call Admob Splash Native")
-                    admobNativePreload.loadNativeAds(
-                        activity,
-                        getResString(R.string.admob_native_ids),
-                        rcvNativeAd,
-                        diComponent.sharedPreferenceUtils.isAppPurchased,
-                        diComponent.internetManager.isInternetConnected,
-                        object : NativeCallBack {
-                            override fun onAdFailedToLoad(adError: String) {
-                                isNativeLoadedOrFailed = true
-                            }
-
-                            override fun onAdLoaded() {
-                                isNativeLoadedOrFailed = true
-                                val endTime = System.currentTimeMillis()
-                                val loadingTime:Int = ((endTime - startTime)/1000).toInt()
-                                Log.d("AdsInformation", "NativeLoadingTime: ${loadingTime}s")
-                            }
-                        })
-                }
-                else -> {
-                    isNativeLoadedOrFailed = true
-                }
-            }
         }
-
-
     }
 
     private fun checkAdvertisement() {
-        if (diComponent.internetManager.isInternetConnected) {
+        if (internetManager.isInternetConnected) {
             if (mCounter < 16) {
                 try {
                     mCounter++
-                    if (isInterLoadOrFailed && isNativeLoadedOrFailed) {
+                    if (isInterLoadOrFailed) {
                         moveNext()
                         mHandler.removeCallbacks { adsRunner }
                     } else {
@@ -157,11 +152,19 @@ class FragmentSplashStart : BaseFragment<FragmentSplashStartBinding>(R.layout.fr
 
     }
 
-    private fun  moveNext(timeMilli:Long = 500) {
+    private fun moveNext(timeMilli: Long = 500) {
         withDelay(timeMilli) {
-            lifecycleScope.launchWhenResumed {
-                if (isAdded){
-                    navigateTo(R.id.fragmentSplashStart,R.id.action_fragmentStart_to_fragmentLanguage)
+            launchWhenResumed {
+                if (isAdded) {
+                    (activity as StartupActivity).nextActivity()
+                    admobInterstitial.showInterstitialAd(activity, object :
+                        InterstitialOnShowCallBack {
+                        override fun onAdDismissedFullScreenContent() {}
+                        override fun onAdFailedToShowFullScreenContent() {}
+                        override fun onAdShowedFullScreenContent() {}
+                        override fun onAdImpression() {}
+
+                    })
                 }
             }
         }
@@ -184,8 +187,5 @@ class FragmentSplashStart : BaseFragment<FragmentSplashStartBinding>(R.layout.fr
     private fun resumeHandler() {
         mHandler.post(adsRunner)
     }
-    override fun navIconBackPressed() {}
-
-    override fun onBackPressed() {}
 
 }

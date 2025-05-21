@@ -1,6 +1,9 @@
-package com.orbitalsonic.admobads.ui.fragments.home
+package com.orbitalsonic.admobads.ui.home
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import com.orbitalsonic.admobads.R
 import com.orbitalsonic.admobads.adsconfig.banners.AdmobBanner
 import com.orbitalsonic.admobads.adsconfig.banners.callbacks.BannerCallBack
@@ -11,11 +14,17 @@ import com.orbitalsonic.admobads.adsconfig.natives.enums.NativeType
 import com.orbitalsonic.admobads.adsconfig.rewarded.AdmobRewarded
 import com.orbitalsonic.admobads.adsconfig.rewarded.callbacks.RewardedOnLoadCallBack
 import com.orbitalsonic.admobads.adsconfig.rewarded.callbacks.RewardedOnShowCallBack
+import com.orbitalsonic.admobads.common.firebase.RemoteConstants.rcvBannerAd
+import com.orbitalsonic.admobads.common.firebase.RemoteConstants.rcvNativeAd
+import com.orbitalsonic.admobads.common.firebase.RemoteConstants.rcvRewardAd
+import com.orbitalsonic.admobads.common.network.InternetManager
+import com.orbitalsonic.admobads.common.preferences.SharedPrefManager
 import com.orbitalsonic.admobads.databinding.FragmentHomeBinding
-import com.orbitalsonic.admobads.helpers.firebase.RemoteConstants
-import com.orbitalsonic.admobads.helpers.listeners.RapidSafeListener.setOnRapidClickSafeListener
-import com.orbitalsonic.admobads.ui.activities.MainActivity
-import com.orbitalsonic.admobads.ui.fragments.base.BaseFragment
+import com.orbitalsonic.admobads.helpers.listener.RapidSafeListener.setOnRapidClickSafeListener
+import com.orbitalsonic.admobads.helpers.navigation.navigateTo
+import com.orbitalsonic.admobads.helpers.utils.getResString
+import com.orbitalsonic.admobads.ui.MainActivity
+import com.orbitalsonic.admobads.ui.base.fragments.BaseFragment
 
 /**
  * @Author: Muhammad Yaqoob
@@ -24,13 +33,28 @@ import com.orbitalsonic.admobads.ui.fragments.base.BaseFragment
  *      -> https://github.com/orbitalsonic
  *      -> https://www.linkedin.com/in/myaqoob7
  */
-class FragmentHome : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
+class FragmentHome : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
     private val admobBanner by lazy { AdmobBanner() }
     private val admobNative by lazy { AdmobNative() }
     private val admobRewarded by lazy { AdmobRewarded() }
 
-    override fun onViewCreatedOneTime() {
+    private val sharedPrefManager by lazy {
+        SharedPrefManager(
+            requireActivity().getSharedPreferences(
+                "app_preferences",
+                MODE_PRIVATE
+            )
+        )
+    }
+
+    private val internetManager by lazy {
+        val connectivityManager =
+            requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        InternetManager(connectivityManager)
+    }
+
+    override fun onViewCreated() {
         binding.mbClickSample.setOnRapidClickSafeListener {
             navigateTo(R.id.fragmentHome, R.id.action_fragmentHome_to_fragmentSample)
             (activity as MainActivity).checkCounter()
@@ -48,30 +72,24 @@ class FragmentHome : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         loadAds()
     }
 
-    override fun onViewCreatedEverytime() {}
-
-    override fun navIconBackPressed() {
-        onBackPressed()
-    }
-
-    override fun onBackPressed() {}
-
-    fun loadRewardedAd(){
+    fun loadRewardedAd() {
         Log.d("AdsInformation", "Call Admob Rewarded")
         admobRewarded.loadRewardedAd(
             activity,
             getString(R.string.admob_rewarded_ids),
-            RemoteConstants.rcvRewardAd,
-            diComponent.sharedPreferenceUtils.isAppPurchased,
-            diComponent.internetManager.isInternetConnected,
+            rcvRewardAd,
+            sharedPrefManager.isAppPurchased,
+            internetManager.isInternetConnected,
             object : RewardedOnLoadCallBack {
                 override fun onAdFailedToLoad(adError: String) {
                     binding.mbClickRewarded.isEnabled = true
                 }
+
                 override fun onAdLoaded() {
                     showRewardedAd()
                     binding.mbClickRewarded.isEnabled = true
                 }
+
                 override fun onPreloaded() {
                     showRewardedAd()
                     binding.mbClickRewarded.isEnabled = true
@@ -80,7 +98,7 @@ class FragmentHome : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         )
     }
 
-    fun showRewardedAd(){
+    fun showRewardedAd() {
         admobRewarded.showRewardedAd(
             activity,
             object : RewardedOnShowCallBack {
@@ -98,9 +116,9 @@ class FragmentHome : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             activity,
             binding.adsBannerPlaceHolder,
             getResString(R.string.admob_banner_ids),
-            RemoteConstants.rcvBannerAd,
-            diComponent.sharedPreferenceUtils.isAppPurchased,
-            diComponent.internetManager.isInternetConnected,
+            rcvBannerAd,
+            sharedPrefManager.isAppPurchased,
+            internetManager.isInternetConnected,
             BannerType.ADAPTIVE_BANNER,
             object : BannerCallBack {
                 override fun onAdFailedToLoad(adError: String) {}
@@ -114,9 +132,9 @@ class FragmentHome : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             activity,
             binding.adsNativePlaceHolder,
             getResString(R.string.admob_native_ids),
-            RemoteConstants.rcvNativeAd,
-            diComponent.sharedPreferenceUtils.isAppPurchased,
-            diComponent.internetManager.isInternetConnected,
+            rcvNativeAd,
+            sharedPrefManager.isAppPurchased,
+            internetManager.isInternetConnected,
             NativeType.BANNER,
             object : NativeCallBack {
                 override fun onAdFailedToLoad(adError: String) {}

@@ -1,6 +1,7 @@
-package com.orbitalsonic.admobads.ui.activities
+package com.orbitalsonic.admobads.ui
 
-import android.os.Bundle
+import android.content.Context
+import android.net.ConnectivityManager
 import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -11,11 +12,14 @@ import com.orbitalsonic.admobads.R
 import com.orbitalsonic.admobads.adsconfig.interstitial.AdmobInterstitial
 import com.orbitalsonic.admobads.adsconfig.interstitial.callbacks.InterstitialOnLoadCallBack
 import com.orbitalsonic.admobads.adsconfig.interstitial.callbacks.InterstitialOnShowCallBack
+import com.orbitalsonic.admobads.common.firebase.RemoteConstants.rcvInterAd
+import com.orbitalsonic.admobads.common.firebase.RemoteConstants.rcvRemoteCounter
+import com.orbitalsonic.admobads.common.firebase.RemoteConstants.totalCount
+import com.orbitalsonic.admobads.common.network.InternetManager
+import com.orbitalsonic.admobads.common.preferences.SharedPrefManager
 import com.orbitalsonic.admobads.databinding.ActivityMainBinding
-import com.orbitalsonic.admobads.helpers.firebase.RemoteConstants.rcvInterAd
-import com.orbitalsonic.admobads.helpers.firebase.RemoteConstants.rcvRemoteCounter
-import com.orbitalsonic.admobads.helpers.firebase.RemoteConstants.totalCount
-import com.orbitalsonic.admobads.helpers.utils.CleanMemory
+import com.orbitalsonic.admobads.helpers.ui.statusBarColorUpdate
+import com.orbitalsonic.admobads.ui.base.activities.BaseActivity
 
 /**
  * @Author: Muhammad Yaqoob
@@ -24,17 +28,32 @@ import com.orbitalsonic.admobads.helpers.utils.CleanMemory
  *      -> https://github.com/orbitalsonic
  *      -> https://www.linkedin.com/in/myaqoob7
  */
-class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
+class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     private val admobInterstitial by lazy { AdmobInterstitial() }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setSupportActionBar(binding.materialToolbar)
+    private val sharedPrefManager by lazy { SharedPrefManager(getSharedPreferences(
+        "app_preferences",
+        MODE_PRIVATE
+    )) }
+
+    private val internetManager by lazy {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        InternetManager(connectivityManager)
+    }
+
+    override fun onCreated() {
+        statusBarColorUpdate(R.color.primary600)
+        initToolbar()
         initNavController()
+    }
+
+    private fun initToolbar() {
+        setSupportActionBar(binding.materialToolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
     }
 
 
@@ -73,8 +92,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             this,
             getString(R.string.admob_inter_ids),
             rcvInterAd,
-            diComponent.sharedPreferenceUtils.isAppPurchased,
-            diComponent.internetManager.isInternetConnected,
+            sharedPrefManager.isAppPurchased,
+            internetManager.isInternetConnected,
             object : InterstitialOnLoadCallBack {
                 override fun onAdFailedToLoad(adError: String) {}
                 override fun onAdLoaded() {}
@@ -93,16 +112,5 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 override fun onAdImpression() {}
             }
         )
-    }
-
-
-    /**
-     *  Call 'CleanMemory.clean()' to avoid memory leaks.
-     *  This destroys all the resources
-     */
-
-    override fun onDestroy() {
-        CleanMemory.clean()
-        super.onDestroy()
     }
 }

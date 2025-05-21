@@ -1,13 +1,21 @@
-package com.orbitalsonic.admobads.ui.fragments.sample
+package com.orbitalsonic.admobads.ui.samples
 
+import android.content.Context
+import android.net.ConnectivityManager
+import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import com.orbitalsonic.admobads.R
 import com.orbitalsonic.admobads.adsconfig.banners.AdmobBanner
 import com.orbitalsonic.admobads.adsconfig.banners.callbacks.BannerCallBack
 import com.orbitalsonic.admobads.adsconfig.banners.enums.BannerType
+import com.orbitalsonic.admobads.common.firebase.RemoteConstants.rcvBannerAd
+import com.orbitalsonic.admobads.common.network.InternetManager
+import com.orbitalsonic.admobads.common.observers.SingleLiveEvent
+import com.orbitalsonic.admobads.common.preferences.SharedPrefManager
 import com.orbitalsonic.admobads.databinding.FragmentBannerBinding
-import com.orbitalsonic.admobads.helpers.firebase.RemoteConstants
-import com.orbitalsonic.admobads.helpers.observers.SingleLiveEvent
-import com.orbitalsonic.admobads.ui.fragments.base.BaseFragment
+import com.orbitalsonic.admobads.helpers.navigation.popFrom
+import com.orbitalsonic.admobads.helpers.ui.goBackPressed
+import com.orbitalsonic.admobads.helpers.utils.getResString
+import com.orbitalsonic.admobads.ui.base.fragments.BaseFragment
 
 /**
  * @Author: Muhammad Yaqoob
@@ -16,34 +24,46 @@ import com.orbitalsonic.admobads.ui.fragments.base.BaseFragment
  *      -> https://github.com/orbitalsonic
  *      -> https://www.linkedin.com/in/myaqoob7
  */
-class FragmentBanner : BaseFragment<FragmentBannerBinding>(R.layout.fragment_banner) {
+class FragmentBanner : BaseFragment<FragmentBannerBinding>(FragmentBannerBinding::inflate) {
+
+    private val sharedPrefManager by lazy {
+        SharedPrefManager(
+            requireActivity().getSharedPreferences(
+                "app_preferences",
+                MODE_PRIVATE
+            )
+        )
+    }
+
+    private val internetManager by lazy {
+        val connectivityManager =
+            requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        InternetManager(connectivityManager)
+    }
 
     private val admobBanner by lazy { AdmobBanner() }
     private val adsObserver = SingleLiveEvent<Boolean>()
     private var isCollapsibleOpen = false
     private var isBackPressed = false
 
-    override fun onViewCreatedOneTime() {
+    override fun onViewCreated() {
         loadAds()
-    }
-
-    override fun onViewCreatedEverytime() {
         initObserver()
+
+        goBackPressed {
+            onBackPressed()
+        }
     }
 
     private fun initObserver(){
-        adsObserver.observe(this){
+        adsObserver.observe(viewLifecycleOwner){
             if (it){
                 onBack()
             }
         }
     }
 
-    override fun navIconBackPressed() {
-        onBackPressed()
-    }
-
-    override fun onBackPressed() {
+    private fun onBackPressed() {
         if (isAdded){
             try {
                 if (!isBackPressed){
@@ -70,9 +90,9 @@ class FragmentBanner : BaseFragment<FragmentBannerBinding>(R.layout.fragment_ban
             activity,
             binding.adsBannerPlaceHolder,
             getResString(R.string.admob_banner_ids),
-            RemoteConstants.rcvBannerAd,
-            diComponent.sharedPreferenceUtils.isAppPurchased,
-            diComponent.internetManager.isInternetConnected,
+            rcvBannerAd,
+            sharedPrefManager.isAppPurchased,
+            internetManager.isInternetConnected,
             BannerType.COLLAPSIBLE_BOTTOM,
             object : BannerCallBack {
                 override fun onAdClosed() {

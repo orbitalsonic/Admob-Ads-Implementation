@@ -5,6 +5,7 @@ import android.app.Application
 import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -19,9 +20,9 @@ import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback
 import com.orbitalsonic.admobads.R
 import com.orbitalsonic.admobads.adsconfig.utils.AdsConstants.isOpenAdLoading
 import com.orbitalsonic.admobads.adsconfig.utils.AdsConstants.mAppOpenAd
-import com.orbitalsonic.admobads.helpers.firebase.RemoteConstants.rcvAppOpen
-import com.orbitalsonic.admobads.helpers.koin.DIComponent
-import com.orbitalsonic.admobads.ui.activities.SplashActivity
+import com.orbitalsonic.admobads.common.firebase.RemoteConstants.rcvAppOpen
+import com.orbitalsonic.admobads.common.preferences.SharedPrefManager
+import com.orbitalsonic.admobads.ui.startup.StartupActivity
 import java.util.Date
 
 /**
@@ -35,7 +36,15 @@ class AdmobAppOpen(private val myApplication: Application) : LifecycleObserver,
     ActivityLifecycleCallbacks {
     private var currentActivity: Activity? = null
     private var loadTime: Long = 0
-    private val diComponent by lazy { DIComponent() }
+
+    private val sharedPrefManager by lazy {
+        SharedPrefManager(
+            myApplication.getSharedPreferences(
+                "app_preferences",
+                MODE_PRIVATE
+            )
+        )
+    }
 
     /**
      * 0 = Ads Off
@@ -45,10 +54,11 @@ class AdmobAppOpen(private val myApplication: Application) : LifecycleObserver,
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onStart() {
         try {
-            if (!diComponent.sharedPreferenceUtils.isAppPurchased && rcvAppOpen != 0) {
+            if (sharedPrefManager.isAppPurchased.not() && rcvAppOpen != 0) {
                 showAdIfAvailable()
             }
-        } catch (ignored: Exception) {}
+        } catch (ignored: Exception) {
+        }
     }
 
     fun fetchAd() {
@@ -97,7 +107,7 @@ class AdmobAppOpen(private val myApplication: Application) : LifecycleObserver,
             }
         }
 
-        if (!diComponent.sharedPreferenceUtils.isAppPurchased && rcvAppOpen != 0) {
+        if (sharedPrefManager.isAppPurchased.not() && rcvAppOpen != 0) {
             if (mAppOpenAd == null && !isOpenAdLoading) {
                 isOpenAdLoading = true
                 try {
@@ -107,22 +117,24 @@ class AdmobAppOpen(private val myApplication: Application) : LifecycleObserver,
                         AdRequest.Builder().build(),
                         loadCallback
                     )
-                } catch (ignored: Exception) {}
+                } catch (ignored: Exception) {
+                }
             }
         }
     }
 
     private fun showAdIfAvailable() {
         try {
-            if (!diComponent.sharedPreferenceUtils.isAppPurchased && rcvAppOpen != 0) {
-                if (currentActivity is SplashActivity || currentActivity is AdActivity)
+            if (sharedPrefManager.isAppPurchased.not() && rcvAppOpen != 0) {
+                if (currentActivity is StartupActivity || currentActivity is AdActivity)
                     return
 
                 mAppOpenAd?.show(currentActivity!!)
             } else {
                 fetchAd()
             }
-        } catch (ignored: Exception) {}
+        } catch (ignored: Exception) {
+        }
     }
 
     private var appOpenListener: AppOpenListener? = null
