@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragmentSplash"
-        android:name="com.orbitalsonic.admobadsconfigurations.ui.fragments.splash.FragmentSplash"
+        android:name="com.orbitalsonic.admobads.ui.fragments.splash.FragmentSplash"
         android:label="fragment_splash"
         tools:layout="@layout/fragment_splash">
         <action
@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentSplashStart"
-        android:name="com.orbitalsonic.admobadsconfigurations.ui.fragments.splash.FragmentSplashStart"
+        android:name="com.orbitalsonic.admobads.ui.fragments.splash.FragmentSplashStart"
         android:label="fragment_start"
         tools:layout="@layout/fragment_splash_start">
         <action
@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentSplashLanguage"
-        android:name="com.orbitalsonic.admobadsconfigurations.ui.fragments.splash.FragmentSplashLanguage"
+        android:name="com.orbitalsonic.admobads.ui.fragments.splash.FragmentSplashLanguage"
         android:label="fragment_language"
         tools:layout="@layout/fragment_splash_language" />
 </navigation>
