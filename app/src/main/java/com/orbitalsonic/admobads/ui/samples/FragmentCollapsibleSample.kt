@@ -11,7 +11,7 @@ import com.orbitalsonic.admobads.common.firebase.RemoteConstants.rcvBannerAd
 import com.orbitalsonic.admobads.common.network.InternetManager
 import com.orbitalsonic.admobads.common.observers.SingleLiveEvent
 import com.orbitalsonic.admobads.common.preferences.SharedPrefManager
-import com.orbitalsonic.admobads.databinding.FragmentBannerBinding
+import com.orbitalsonic.admobads.databinding.FragmentCollapsibleSampleBinding
 import com.orbitalsonic.admobads.helpers.navigation.popFrom
 import com.orbitalsonic.admobads.helpers.ui.goBackPressed
 import com.orbitalsonic.admobads.helpers.utils.getResString
@@ -24,7 +24,7 @@ import com.orbitalsonic.admobads.ui.base.fragments.BaseFragment
  *      -> https://github.com/orbitalsonic
  *      -> https://www.linkedin.com/in/myaqoob7
  */
-class FragmentBanner : BaseFragment<FragmentBannerBinding>(FragmentBannerBinding::inflate) {
+class FragmentCollapsibleSample : BaseFragment<FragmentCollapsibleSampleBinding>(FragmentCollapsibleSampleBinding::inflate) {
 
     private val sharedPrefManager by lazy {
         SharedPrefManager(
@@ -82,7 +82,7 @@ class FragmentBanner : BaseFragment<FragmentBannerBinding>(FragmentBannerBinding
     }
 
     private fun onBack(){
-        popFrom(R.id.fragmentBanner)
+        popFrom(R.id.fragmentCollapsibleSample)
     }
 
     private fun loadAds(){

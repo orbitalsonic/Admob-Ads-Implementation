@@ -11,29 +11,65 @@
         android:label="@string/app_name"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_fragmentHome_to_fragmentSample"
-            app:destination="@id/fragmentSample"
+            android:id="@+id/action_fragmentHome_to_fragmentBannerSample"
+            app:destination="@id/fragmentBannerSample"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:popExitAnim="@anim/slide_out_right"/>
         <action
-            android:id="@+id/action_fragmentHome_to_fragmentBanner"
-            app:destination="@id/fragmentBanner"
+            android:id="@+id/action_fragmentHome_to_fragmentCollapsibleSample"
+            app:destination="@id/fragmentCollapsibleSample"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_fragmentHome_to_fragmentNativeSmallSample"
+            app:destination="@id/fragmentNativeSmallSample"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_fragmentHome_to_fragmentNativeLargeSample"
+            app:destination="@id/fragmentNativeLargeSample"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
-        android:id="@+id/fragmentSample"
-        android:name="com.orbitalsonic.admobads.ui.samples.FragmentSample"
-        android:label="FragmentSample"
-        tools:layout="@layout/fragment_sample"/>
+        android:id="@+id/fragmentBannerSample"
+        android:name="com.orbitalsonic.admobads.ui.samples.FragmentBannerSample"
+        android:label="Adaptive Banner"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"/>
     <fragment
-        android:id="@+id/fragmentBanner"
-        android:name="com.orbitalsonic.admobads.ui.samples.FragmentBanner"
-        android:label="FragmentBanner"
-        tools:layout="@layout/fragment_banner"/>
+        android:id="@+id/fragmentCollapsibleSample"
+        android:name="com.orbitalsonic.admobads.ui.samples.FragmentCollapsibleSample"
+        android:label="Collapsible Banner"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"/>
+    <fragment
+        android:id="@+id/fragmentNativeSmallSample"
+        android:name="com.orbitalsonic.admobads.ui.samples.FragmentNativeSmallSample"
+        android:label="Small Native"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"/>
+    <fragment
+        android:id="@+id/fragmentNativeLargeSample"
+        android:name="com.orbitalsonic.admobads.ui.samples.FragmentNativeLargeSample"
+        android:label="Large Native"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"/>
 
 </navigation>

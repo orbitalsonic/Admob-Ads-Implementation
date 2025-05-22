@@ -4,13 +4,12 @@ import android.content.Context
 import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import com.orbitalsonic.admobads.R
-import com.orbitalsonic.admobads.adsconfig.natives.AdmobNative
-import com.orbitalsonic.admobads.adsconfig.natives.callbacks.NativeCallBack
-import com.orbitalsonic.admobads.adsconfig.natives.enums.NativeType
-import com.orbitalsonic.admobads.common.firebase.RemoteConstants.rcvNativeAd
+import com.orbitalsonic.admobads.adsconfig.banners.AdmobBanner
+import com.orbitalsonic.admobads.adsconfig.banners.enums.BannerType
+import com.orbitalsonic.admobads.common.firebase.RemoteConstants.rcvBannerAd
 import com.orbitalsonic.admobads.common.network.InternetManager
 import com.orbitalsonic.admobads.common.preferences.SharedPrefManager
-import com.orbitalsonic.admobads.databinding.FragmentSampleBinding
+import com.orbitalsonic.admobads.databinding.FragmentBannerSampleBinding
 import com.orbitalsonic.admobads.helpers.utils.getResString
 import com.orbitalsonic.admobads.ui.base.fragments.BaseFragment
 
@@ -21,7 +20,8 @@ import com.orbitalsonic.admobads.ui.base.fragments.BaseFragment
  *      -> https://github.com/orbitalsonic
  *      -> https://www.linkedin.com/in/myaqoob7
  */
-class FragmentSample : BaseFragment<FragmentSampleBinding>(FragmentSampleBinding::inflate) {
+class FragmentBannerSample :
+    BaseFragment<FragmentBannerSampleBinding>(FragmentBannerSampleBinding::inflate) {
 
     private val sharedPrefManager by lazy {
         SharedPrefManager(
@@ -38,27 +38,36 @@ class FragmentSample : BaseFragment<FragmentSampleBinding>(FragmentSampleBinding
         InternetManager(connectivityManager)
     }
 
-    private val admobNative by lazy { AdmobNative() }
+    private val admobBanner by lazy { AdmobBanner() }
 
     override fun onViewCreated() {
         loadAds()
     }
 
     private fun loadAds() {
-        admobNative.loadNativeAds(
+        admobBanner.loadBannerAds(
             activity,
-            binding.adsPlaceHolder,
-            getResString(R.string.admob_native_ids),
-            rcvNativeAd,
+            binding.adsBannerPlaceHolder,
+            getResString(R.string.admob_banner_ids),
+            rcvBannerAd,
             sharedPrefManager.isAppPurchased,
             internetManager.isInternetConnected,
-            NativeType.LARGE,
-            object : NativeCallBack {
-                override fun onAdFailedToLoad(adError: String) {}
-                override fun onAdLoaded() {}
-                override fun onAdImpression() {}
-                override fun onPreloaded() {}
-            }
+            BannerType.ADAPTIVE_BANNER
         )
+    }
+
+    override fun onPause() {
+        admobBanner.bannerOnPause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        admobBanner.bannerOnResume()
+        super.onResume()
+    }
+
+    override fun onDestroy() {
+        admobBanner.bannerOnDestroy()
+        super.onDestroy()
     }
 }

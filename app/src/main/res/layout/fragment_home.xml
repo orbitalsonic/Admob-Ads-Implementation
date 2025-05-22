@@ -1,84 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.FragmentHome">
-
-    <FrameLayout
-        android:id="@+id/ads_native_place_holder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/adsColor"
-        android:maxHeight="100dp"
-        app:layout_constraintHeight_max="100dp"
-        tools:visibility="visible"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
-
-        <include
-            layout="@layout/loading_ad"
-            android:layout_width="match_parent"
-            android:layout_height="70dp" />
-    </FrameLayout>
+    android:orientation="vertical"
+    >
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/mb_click_sample"
+        android:id="@+id/btn_collapsible_banner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sample Fragment"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Collapsible Bannner"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/_10sdp"
         />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/mb_click_banner"
+        android:id="@+id/btn_adaptive_banner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Banner Fragment"
-        android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mb_click_sample"
+        android:text="Adaptive Banner"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_gravity="center"
         />
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/mb_click_rewarded"
+        android:id="@+id/btn_small_native"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Small Native"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_gravity="center"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_large_native"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Large Native"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_gravity="center"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_interstitial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Interstitial with counter"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_gravity="center"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_rewarded"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Rewarded Ad"
-        android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mb_click_banner"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_gravity="center"
         />
 
-
-    <FrameLayout
-        android:id="@+id/ads_banner_place_holder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/adsColor"
-        android:maxHeight="70dp"
-        app:layout_constraintHeight_max="70dp"
-        tools:visibility="visible"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        >
-
-        <include
-            layout="@layout/loading_ad"
-            android:layout_width="match_parent"
-            android:layout_height="70dp" />
-    </FrameLayout>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
