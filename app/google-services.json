@@ -1,36 +1,26 @@
 {
   "project_info": {
-    "project_number": "240179671172",
-    "project_id": "sonic-testing-projects",
-    "storage_bucket": "sonic-testing-projects.appspot.com"
+    "project_number": "688202145716",
+    "project_id": "ads-implementation-3f226",
+    "storage_bucket": "ads-implementation-3f226.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:240179671172:android:33bd251003826c27b8d2d1",
+        "mobilesdk_app_id": "1:688202145716:android:19af4419649d88def4dce1",
         "android_client_info": {
           "package_name": "com.orbitalsonic.admobads"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "240179671172-iaktjeap9fkqvd5jsj35a81he5fko06l.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDGnIUlpYv2Bo_GC29FxLpES2vhzMz4XPE"
+          "current_key": "AIzaSyAKWKZWbfF5BMAmdx0LyUSRXpDf0x9CXBU"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "240179671172-iaktjeap9fkqvd5jsj35a81he5fko06l.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }
